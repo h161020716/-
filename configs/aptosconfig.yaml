@@ -1,0 +1,26 @@
+Datasets:
+  datasets_path: "I:\\Datasets\\kagglehub\\datasets\\mariaherrerot\\aptos2019\\versions\\3\\"
+  train_label: "train_1.csv"
+  test_label: "test.csv"
+  valid_label: "valid.csv"
+  train_data: "train_images\\train_images"
+  test_data: "test_images\\test_images"
+  valid_data: "valid_images\\valid_images"
+  less: "less"
+
+Device: "cuda:0"
+
+PCA:
+  n_components: "2"
+  reconstructed: True
+  visualize: True
+
+ICA:
+  n_components: "2"
+  reconstructed: True
+  visualize: True
+
+UMAP:
+  n_components: "2"
+  visualize: True
+  reconstructed: True
