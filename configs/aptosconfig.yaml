@@ -24,3 +24,13 @@ UMAP:
   n_components: "2"
   visualize: True
   reconstructed: True
+
+KMEANS:
+  n_clusters: "5"
+  visualize: True
+  reconstructed: True
+
+LDA:
+    n_components: "2"
+    visualize: True
+    reconstructed: True

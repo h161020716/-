@@ -3,6 +3,8 @@ import datetime
 from tradition.PCA import Pca
 from tradition.ICA import Ica
 from tradition.UMap import UMap
+from tradition.KMeans import Kmeans
+from tradition.LDA import Lda
 import argparse
 import os
 
@@ -19,12 +21,15 @@ if __name__ == "__main__":
     parser.add_argument("--PCA", action="store_true", help="选择使用PCA方法进行降维")
     parser.add_argument("--ICA", action="store_true", help="选择使用ICA方法进行降维")
     parser.add_argument("--UMAP", action="store_true", help="选择使用UMAP方法进行降维")
+    parser.add_argument("--KMEANS", action="store_true", help="选择使用KMEANS方法进行降维")
+    parser.add_argument("--LDA", action="store_true", help="选择使用LDA方法进行降维")
     parser.add_argument("--n_components", type=int, default=2, help="指定PCA的降维维数，默认为2")
+    parser.add_argument("--n_clusters", type=int, default=5, help="指定KMeans的聚类簇数，默认为2")
     parser.add_argument("--device", type=str, default="cuda:0", choices=["cpu", "cuda"], help="选择运行设备：cpu或cuda")
     parser.add_argument("--config", type=str, default="configs/aptosconfig.yaml", help="指定配置文件路径")
-    parser.add_argument("--save_num",type=int,default=10,help="保存前n个降维后的图像")
-    parser.add_argument("--visualize",action="store_true",help="是否可视化降维后的数据")
-    parser.add_argument("--reconstructed",action="store_true",help="是否保存重建后的图像")
+    parser.add_argument("--save_num", type=int, default=10, help="保存前n个降维后的图像")
+    parser.add_argument("--visualize", action="store_true", help="是否可视化降维后的数据")
+    parser.add_argument("--reconstructed", action="store_true", help="是否保存重建后的图像")
 
     args = parser.parse_args()
 
@@ -39,10 +44,14 @@ if __name__ == "__main__":
         config['PCA']['visualize'] = False
         config['ICA']['visualize'] = False
         config['UMAP']['visualize'] = False
+        config['KMEANS']['visualize'] = False
+        config['LDA']['visualize'] = False
     if not args.reconstructed:
         config['PCA']['reconstructed'] = False
         config['ICA']['reconstructed'] = False
         config['UMAP']['reconstructed'] = False
+        config['KMEANS']['reconstructed'] = False
+        config['LDA']['reconstructed'] = False
 
     if args.PCA:
         config['save_path'] = "results/PCA/" + cur_time
@@ -83,4 +92,30 @@ if __name__ == "__main__":
             u.visualize(config)
         if config['UMAP']['reconstructed']:
             u.reconstructed(config, args.save_num)
+    elif args.KMEANS:
+        config['save_path'] = "results/KMEANS/" + cur_time
+        if not os.path.exists("results/KMEANS/"):
+            os.mkdir("results/KMEANS/")
+        if not os.path.exists(config['save_path']):
+            os.mkdir(config['save_path'])
+        k = Kmeans(int(config['KMEANS']['n_clusters']), args.n_components)
+        k.set_params(config)
+        k.frontend(config)
+        if config['KMEANS']['visualize']:
+            k.visualize(config)
+        if config['KMEANS']['reconstructed']:
+            k.reconstructed(config, args.save_num)
+    elif args.LDA:
+        config['save_path'] = "results/LDA/" + cur_time
+        if not os.path.exists("results/LDA/"):
+            os.mkdir("results/LDA/")
+        if not os.path.exists(config['save_path']):
+            os.mkdir(config['save_path'])
+        l = Lda(args.n_components)
+        l.set_params(config)
+        l.frontend(config)
+        if config['LDA']['visualize']:
+            l.visualize(config)
+        # if config['LDA']['reconstructed']:
+        #     l.reconstructed(config, args.save_num)
 
