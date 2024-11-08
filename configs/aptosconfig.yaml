@@ -1,5 +1,5 @@
 Datasets:
-  datasets_path: "I:\\Datasets\\kagglehub\\datasets\\mariaherrerot\\aptos2019\\versions\\3\\"
+  datasets_path: your datasets's path
   train_label: "train_1.csv"
   test_label: "test.csv"
   valid_label: "valid.csv"
