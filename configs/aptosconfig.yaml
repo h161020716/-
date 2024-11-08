@@ -34,3 +34,8 @@ LDA:
     n_components: "2"
     visualize: True
     reconstructed: True
+
+T_SNE:
+    n_components: "2"
+    visualize: True
+    reconstructed: True

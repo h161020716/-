@@ -1,12 +1,14 @@
 import yaml
+import os
 import datetime
+import argparse
 from tradition.PCA import Pca
 from tradition.ICA import Ica
 from tradition.UMap import UMap
 from tradition.KMeans import Kmeans
 from tradition.LDA import Lda
-import argparse
-import os
+from tradition.T_SNE import Tsne
+
 
 
 def load_config(path: str):
@@ -23,6 +25,7 @@ if __name__ == "__main__":
     parser.add_argument("--UMAP", action="store_true", help="选择使用UMAP方法进行降维")
     parser.add_argument("--KMEANS", action="store_true", help="选择使用KMEANS方法进行降维")
     parser.add_argument("--LDA", action="store_true", help="选择使用LDA方法进行降维")
+    parser.add_argument("--T_SNE",action="store_true",help="选择使用T-SNE方法进行降维")
     parser.add_argument("--n_components", type=int, default=2, help="指定PCA的降维维数，默认为2")
     parser.add_argument("--n_clusters", type=int, default=5, help="指定KMeans的聚类簇数，默认为2")
     parser.add_argument("--device", type=str, default="cuda:0", choices=["cpu", "cuda"], help="选择运行设备：cpu或cuda")
@@ -118,4 +121,14 @@ if __name__ == "__main__":
             l.visualize(config)
         # if config['LDA']['reconstructed']:
         #     l.reconstructed(config, args.save_num)
+    elif args.T_SNE:
+        config['save_path'] = "results/T_SNE/" + cur_time
+        if not os.path.exists("results/T_SNE/"):
+            os.mkdir("results/T_SNE/")
+        if not os.path.exists(config['save_path']):
+            os.mkdir(config['save_path'])
+        t = Tsne(args.n_components)
+        t.set_params(config)
+        t.frontend(config)
+        t.visualize(config)
 

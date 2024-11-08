@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import datetime
 import torch
 import os
-import pandas as pd
 from utils.load_datasets import load_images_from_folder, load_csv_data
 
 plt.rcParams['font.sans-serif'] = ['SimHei']  # 设置黑体字体（SimHei），用于Windows
