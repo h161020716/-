@@ -49,8 +49,7 @@ class Pca:
         cur_time = datetime.datetime.now().strftime("%H-%M-%S")
         save_path = config['save_path'] + "/reconstructed/"
 
-        print(save_path)
-        if not os.path.exists(config['save_path']):
+        if not os.path.exists(save_path):
             os.mkdir(save_path)
         save_file = os.path.join(save_path, cur_time + '.png')
 

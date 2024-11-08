@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import FastICA
 from sklearn.preprocessing import minmax_scale
 import datetime
+from tqdm import tqdm
 
 plt.rcParams['font.sans-serif'] = ['SimHei']  # 设置黑体字体（SimHei），用于Windows
 plt.rcParams['axes.unicode_minus'] = False  # 正常显示负号
@@ -17,12 +18,14 @@ class Ica:
         self.transformed_data = None
         self.label = None
         self.ica = None
+        self.original_shape = None
 
     def set_params(self, config):
         root = config['Datasets']['datasets_path']
         self.data = load_images_from_folder(root + config['Datasets']['test_data'])
         self.label = load_csv_data(root + config['Datasets']['test_label'])
         self.ica = FastICA(n_components=self.n_components)
+        self.original_shape = self.data.shape
 
     def frontend(self, config):
         n_samples, h, w, c = self.data.shape
@@ -32,7 +35,7 @@ class Ica:
 
     def reconstructed(self, config, num: int):
         reconstructed_data = self.ica.inverse_transform(self.transformed_data)
-        n_samples, h, w, c = self.data.shape[0], *self.data.shape[1:]
+        n_samples, h, w, c = self.original_shape  # 使用保存的形状
 
         cur_time = datetime.datetime.now().strftime("%H-%M-%S")
         save_path = config['save_path'] + "/reconstructed/"
@@ -41,7 +44,7 @@ class Ica:
         save_file = os.path.join(save_path, cur_time + '.png')
 
         plt.figure(figsize=(10, 7))
-        for i in range(num):
+        for i in tqdm(range(num)):
             img_ica = reconstructed_data[i].reshape(h, w, c)
             img_ica = np.clip(img_ica, 0, 1)  # Ensure values are between 0 and 1
 

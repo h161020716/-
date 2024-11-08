@@ -2,6 +2,7 @@ import yaml
 import datetime
 from tradition.PCA import Pca
 from tradition.ICA import Ica
+from tradition.UMap import UMap
 import argparse
 import os
 
@@ -75,4 +76,11 @@ if __name__ == "__main__":
             os.mkdir("results/UMAP/")
         if not os.path.exists(config['save_path']):
             os.mkdir(config['save_path'])
-        pass
+        u = UMap(args.n_components)
+        u.set_params(config)
+        u.frontend(config)
+        if config['UMAP']['visualize']:
+            u.visualize(config)
+        if config['UMAP']['reconstructed']:
+            u.reconstructed(config, args.save_num)
+
